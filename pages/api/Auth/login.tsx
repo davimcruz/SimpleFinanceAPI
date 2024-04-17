@@ -10,13 +10,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // Adicionar cabeçalhos de CORS
-  res.setHeader("Access-Control-Allow-Origin", "https://simplefinance.cloud") // Substitua pelo domínio correto do seu front-end
+  res.setHeader("Access-Control-Allow-Origin", "https://simplefinance.cloud") 
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS")
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
   res.setHeader("Access-Control-Allow-Credentials", "true")
 
-  // Lidar com o pedido de preflight do CORS
   if (req.method === "OPTIONS") {
     return res.status(200).end()
   }
@@ -66,21 +64,24 @@ export default async function handler(
 
         const cookieToken = serialize("token", token, {
           httpOnly: true,
-          sameSite: "strict",
+          sameSite: "none",
+          secure: true,
           maxAge: 86400,
           path: "/",
         })
 
         const cookieEmail = serialize("email", user.email, {
           httpOnly: false,
-          sameSite: "strict",
+          sameSite: "none",
+          secure: true,
           maxAge: 86400,
           path: "/",
         })
 
         const cookieUserId = serialize("userId", user.id, {
           httpOnly: false,
-          sameSite: "strict",
+          sameSite: "none",
+          secure: true,
           maxAge: 86400,
           path: "/",
         })
