@@ -6,7 +6,7 @@ import { dbConfig } from "@/config/dbConfig"
 
 const pool = mysql.createPool(dbConfig)
 
-const allowedOrigins = ["https://simplefinance.cloud", "https://localhost:3001"]
+const allowedOrigins = ["https://simplefinance.cloud", "https://localhost:3"]
 
 export default async function handler(
   req: NextApiRequest,
