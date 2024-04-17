@@ -1,31 +1,25 @@
-import { NextApiRequest, NextApiResponse } from "next"
+// Importando as dependências necessárias
+import express from "express"
 import mysql, { MysqlError } from "mysql"
 import jwt, { Secret } from "jsonwebtoken"
 import { serialize } from "cookie"
 import { dbConfig } from "@/config/dbConfig"
 
+// Criando uma instância do Express
+const app = express()
+
+// Configurando o middleware CORS
+import cors from "cors"
+app.use(cors())
+
+// Configurando o middleware para fazer o parser do corpo das requisições como JSON
+app.use(express.json())
+
+// Criando uma conexão com o banco de dados
 const pool = mysql.createPool(dbConfig)
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  // Definindo headers CORS
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS")
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
-  res.setHeader("Access-Control-Allow-Credentials", "true")
-
-  if (req.method === "OPTIONS") {
-    // Resposta para preflight request
-    res.status(200).end()
-    return
-  }
-
-  if (req.method !== "POST") {
-    // Método não permitido
-    return res.status(405).json({ error: "Método não permitido" })
-  }
-
+// Definindo a rota para a autenticação
+app.post("/api/Auth/login", (req, res) => {
   const { email, password } = req.body
 
   try {
@@ -89,7 +83,6 @@ export default async function handler(
           path: "/",
         })
 
-        // Definindo o domínio de origem dinamicamente, se existir
         if (req.headers.origin) {
           res.setHeader("Access-Control-Allow-Origin", req.headers.origin)
         }
@@ -103,4 +96,9 @@ export default async function handler(
     console.error("Erro:", error)
     return res.status(500).json({ error: "Erro ao processar a requisição." })
   }
-}
+})
+
+// Iniciando o servidor
+app.listen(3000, () => {
+  console.log("Server is running on port 3000")
+})
