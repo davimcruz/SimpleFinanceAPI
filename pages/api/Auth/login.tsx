@@ -89,7 +89,11 @@ export default async function handler(
           path: "/",
         })
 
-        res.setHeader("Access-Control-Allow-Origin", req.headers.origin) // Definindo o domínio de origem dinamicamente
+        // Definindo o domínio de origem dinamicamente, se existir
+        if (req.headers.origin) {
+          res.setHeader("Access-Control-Allow-Origin", req.headers.origin)
+        }
+
         res.setHeader("Set-Cookie", [cookieToken, cookieEmail, cookieUserId])
 
         return res.status(200).json({ message: "Login bem-sucedido." })
