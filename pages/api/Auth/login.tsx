@@ -10,16 +10,19 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  res.setHeader("Access-Control-Allow-Origin", "*") 
+  // Definindo headers CORS
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS")
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
   res.setHeader("Access-Control-Allow-Credentials", "true")
 
   if (req.method === "OPTIONS") {
-    return res.status(200).end()
+    // Resposta para preflight request
+    res.status(200).end()
+    return
   }
 
   if (req.method !== "POST") {
+    // Método não permitido
     return res.status(405).json({ error: "Método não permitido" })
   }
 
@@ -86,6 +89,7 @@ export default async function handler(
           path: "/",
         })
 
+        res.setHeader("Access-Control-Allow-Origin", req.headers.origin) // Definindo o domínio de origem dinamicamente
         res.setHeader("Set-Cookie", [cookieToken, cookieEmail, cookieUserId])
 
         return res.status(200).json({ message: "Login bem-sucedido." })
