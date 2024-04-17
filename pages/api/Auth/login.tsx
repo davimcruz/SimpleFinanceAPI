@@ -6,14 +6,20 @@ import { dbConfig } from "@/config/dbConfig"
 
 const pool = mysql.createPool(dbConfig)
 
+const allowedOrigins = ["https://simplefinance.cloud", "https://localhost:3001"]
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  res.setHeader("Access-Control-Allow-Origin", "https://simplefinance.cloud") 
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS")
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
-  res.setHeader("Access-Control-Allow-Credentials", "true")
+  const origin = req.headers.origin
+
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin)
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS")
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
+    res.setHeader("Access-Control-Allow-Credentials", "true")
+  }
 
   if (req.method === "OPTIONS") {
     return res.status(200).end()
